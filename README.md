@@ -8,4 +8,4 @@ I took WC[1993-2022] datset which was available on [Kaggle](https://www.kaggle.c
 4. Teams with most wins and most loses. 
 5. Most win ratio.
 
-![](https://github.com/maniunix/WC_EDA/tree/master/output/Football_stats_plot.png)
+![](output/Football_stats_plot.png)

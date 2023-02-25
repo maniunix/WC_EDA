@@ -7,3 +7,5 @@ I took WC[1993-2022] datset which was available on [Kaggle](https://www.kaggle.c
 3. Which host nation which had most goals scored during WC.
 4. Teams with most wins and most loses. 
 5. Most win ratio.
+
+![](https://github.com/maniunix/WC_EDA/tree/master/output/Football_stats_plot.png)

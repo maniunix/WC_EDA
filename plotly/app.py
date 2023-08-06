@@ -5,48 +5,52 @@ import dash_html_components as html
 import plotly.express as px
 import glob
 
+
+### Here are some of the Ideas to look for
+## Make a chloropleth map to show the countries participated in WC 2022 and their key metrices
+## Create Heatmap for Most goals scored by different teams thorughout the history
+
+
+
 ### dataframe path
 data_path = glob.glob("archive/*.csv")
 df_2022 = pd.read_csv(data_path[-1])
 
 app = dash.Dash(__name__)
 
-app.layout = html.Div(
-    children=[
-        html.H1(children="WC Analysis"),  # Added a comma after this line
-        html.P(
-            children=(
-                "Analyse the Historical Football WC Data"
-            ),
-        ),
-        dcc.Graph(
-            figure={
-                "data": [
-                    {
-                        "x": df_2022['YEAR'],
-                        "y": df_2022['GOALS SCORED'],
-                        "type": "lines",
-                    },
-                ],
-                "layout": {"title": "Goal Scored per Year "}
-            },
-        ),
-        dcc.Graph(
-            figure={
-                "data": [
-                    {
-                        "x": df_2022['YEAR'],
-                        "y": df_2022['GOALS SCORED'],
-                        "type": "lines",
-                    },
-                ],
-                "layout": {"title": "Goal Scored per Year "}
-            },
-        ),
-    ]
+# Make Chloropleth Map
+app.layout = html.Div(style={"textAlign": "center"},
+    children=[html.H1("Football Host Countries"),
+    dcc.Graph(id = "wc-map",
+              figure = {"layout": 
+              {"height": 650,  # Adjust the height here
+              "width": 1300,   # Adjust the width here
+              }
+            })
+])
+
+@app.callback(
+    dash.dependencies.Output('wc-map', 'figure'),
+    [dash.dependencies.Input('wc-map', 'clickData')]
 )
 
+def update_map(clickData):
+    fig = px.choropleth(
+        df_2022,
+        locations= "HOST",
+        locationmode='country names',
+        color= "YEAR",
+        hover_name= "HOST",
+        projection= "natural earth",
+        color_continuous_scale=px.colors.sequential.Plasma,
+        scope='world'
+    )
 
+    if clickData:
+        selected_country = clickData['points'][0]['location']
+        fig.update_traces(marker=dict(color='red'), selector=dict(location=selected_country))
 
-if __name__ == "__main__":
-    app.run_server(debug=True)
+    return fig
+
+if __name__ == '__main__':
+    app.run_server(debug = True)

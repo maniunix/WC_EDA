@@ -10,4 +10,4 @@ I took WC[1993-2022] datset which was available on [Kaggle](https://www.kaggle.c
 
 ![](output/Football_stats_plot.png)
 
-__Well to my Surprise the stat which surprised me the post is Argentina is the second team in terms of the most loses in the history of FIFA WC meanwhile winning 3 Worldcups.__
+__Well to my Surprise the stat which surprised me the most is Argentina being the second team in terms of the most loses in the history of FIFA WC meanwhile winning 3 Worldcups.__

@@ -4,14 +4,15 @@ import dash_html_components as html
 import pandas as pd
 import glob
 import plotly.graph_objs as go
+import plotly.express as px
 
 app = dash.Dash(__name__)
 
 data_path = glob.glob("archive/*.csv")
-df_2022 = pd.read_csv(data_path[-1])
+df_2022 = pd.read_csv('E:\\Workspace\\Data Science\\Data Science Project\\WC2023\\FIFA - World Cup Summary.csv')
 
 teams = df_2022['HOST']
-year = [x.split('\\')[-1].split('.csv')[0] for x in data_path][:-1]
+year = [x.split('\\')[-1].split('.csv')[0] for x in data_path]
 df = None
 
 app.layout = html.Div(
@@ -37,8 +38,8 @@ app.layout = html.Div(
         dcc.Graph(id="graph",
                   figure={
                       'layout': {
-                          'plot_bgcolor': '#111111',
-                          'paper_bgcolor': '#111111'
+                          'plot_bgcolor': 'rgba(0,0,0,0.1)',
+                          'paper_bgcolor': 'rgba(0,0,0,0.1)'
                           }}),
 
         html.Div(
@@ -47,7 +48,8 @@ app.layout = html.Div(
                  html.Br(), "The Graph shows the Win and Loss percentage of country participated."],
                 style={"text-align": "center"}
             ),  # Set background color and 
-            )
+            ),
+        html.Div(dcc.Graph(id = "position"), style= {"text-align": "center"})
     ]# Set background color for the whole layout
     )
 
@@ -79,6 +81,31 @@ def update_graph(selected_team):
     fig = go.Figure(data=[go.Pie(labels=['Win', 'Loss', 'Draw'], values=[win_percentage, loss_percentage, draw_percentage])])
     fig.update_layout(title={'text': f'Win-Loss Percentage for {selected_team}', 'x': 0.5})
     return fig
+
+@app.callback(
+    dash.dependencies.Output('position', 'figure'),
+    [dash.dependencies.Input('item-dropdown', 'value')]
+)
+def timeseries(value):
+    position = []
+    years = []
+    for i in range(len(data_path)):
+        gdf = pd.read_csv(data_path[i])
+        try:
+            position.append(gdf[gdf['Team'] == value].iloc[:,0].values[0])
+            years.append(year[i])
+        except:
+            pass
+    
+    time_series_df = pd.DataFrame({'Position':position, "Years": years})
+    fig = px.scatter(time_series_df, x='Years', y="Position",color = "Position",range_y = [0,20], title= f"Finished Position of {value} throughout the years")
+    fig.update_layout({
+    'plot_bgcolor': 'rgba(0,0,0,0.2)',
+    'paper_bgcolor': 'rgba(0,0,0,0.1)'
+    }, title_x = 0.5)
+    return fig
+
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)

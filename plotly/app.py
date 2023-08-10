@@ -9,7 +9,8 @@ import plotly.express as px
 app = dash.Dash(__name__)
 
 data_path = glob.glob("archive/*.csv")
-df_2022 = pd.read_csv('E:\\Workspace\\Data Science\\Data Science Project\\WC2023\\FIFA - World Cup Summary.csv')
+df_2022 = pd.read_csv(
+    'E:\\Workspace\\Data Science\\Data Science Project\\WC2023\\FIFA - World Cup Summary.csv')
 
 teams = df_2022['HOST']
 year = [x.split('\\')[-1].split('.csv')[0] for x in data_path]
@@ -32,26 +33,36 @@ app.layout = html.Div(
             style={"width": "200px", "left": "100px"},
             value="1934"  # Default value for dropdown
         ),
-        
+
         html.Div(id='output-div'),
 
-        dcc.Graph(id="graph",
-                  figure={
-                      'layout': {
-                          'plot_bgcolor': 'rgba(0,0,0,0.1)',
-                          'paper_bgcolor': 'rgba(0,0,0,0.1)'
-                          }}),
+        # dcc.Graph(id="graph",
+        #           figure={
+        #               'layout': {
+        #                   'plot_bgcolor': 'rgba(0,0,0,0.1)',
+        #                   'paper_bgcolor': 'rgba(0,0,0,0.1)'
+        #                   }}),
 
         html.Div(
             html.P(
                 ["This Dashboard contains all the countries which participated in Football Worldcup thoughout the Years.",
                  html.Br(), "The Graph shows the Win and Loss percentage of country participated."],
                 style={"text-align": "center"}
-            ),  # Set background color and 
-            ),
-        html.Div(dcc.Graph(id = "position"), style= {"text-align": "center"})
-    ]# Set background color for the whole layout
-    )
+            ),  # Set background color and
+        ),
+        html.Div(children=[dcc.Graph(id="position", style={
+            "display": "block", "position": "absolute", "right": "80px", "width": "50%"}),
+            dcc.Graph(id="graph",
+                      figure={
+                          'layout': {
+                              'plot_bgcolor': 'white',
+                              'paper_bgcolor': 'white'
+                          }}, style={"width": "40%", "left": "10px","margin": "0"})], style={"position": "relative", "text-align": "center",
+                                                               "display": "grid"},
+        )
+    ]  # Set background color for the whole layout
+)
+
 
 @app.callback(
     dash.dependencies.Output('item-dropdown', 'options'),
@@ -60,10 +71,12 @@ app.layout = html.Div(
 )
 def update_dropdown(value):
     global df
-    df = pd.read_csv(f'E:/Workspace/Data Science/Data Science Project/WC2023/archive/{value}.csv')
+    df = pd.read_csv(
+        f'E:/Workspace/Data Science/Data Science Project/WC2023/archive/{value}.csv')
     options = [{'label': team, 'value': team} for team in df['Team']]
     value = df['Team'].iloc[0]
     return options, value
+
 
 @app.callback(
     dash.dependencies.Output('graph', 'figure'),
@@ -72,15 +85,21 @@ def update_dropdown(value):
 def update_graph(selected_team):
     global df
     filtered_df = df[df['Team'] == selected_team]
-    filtered_df['WinPercentage'] = (filtered_df['Win'] / filtered_df['Games Played']) * 100
-    filtered_df['LossPercentage'] = (filtered_df['Loss'] / filtered_df['Games Played']) * 100
-    filtered_df['DrawPercentage'] = (filtered_df['Draw'] / filtered_df['Games Played']) * 100
+    filtered_df['WinPercentage'] = (
+        filtered_df['Win'] / filtered_df['Games Played']) * 100
+    filtered_df['LossPercentage'] = (
+        filtered_df['Loss'] / filtered_df['Games Played']) * 100
+    filtered_df['DrawPercentage'] = (
+        filtered_df['Draw'] / filtered_df['Games Played']) * 100
     win_percentage = filtered_df['WinPercentage'].iloc[0]
     loss_percentage = filtered_df['LossPercentage'].iloc[0]
     draw_percentage = filtered_df['DrawPercentage'].iloc[0]
-    fig = go.Figure(data=[go.Pie(labels=['Win', 'Loss', 'Draw'], values=[win_percentage, loss_percentage, draw_percentage])])
-    fig.update_layout(title={'text': f'Win-Loss Percentage for {selected_team}', 'x': 0.5})
+    fig = go.Figure(data=[go.Pie(labels=['Win', 'Loss', 'Draw'], values=[
+                    win_percentage, loss_percentage, draw_percentage])])
+    fig.update_layout(
+        title={'text': f'Win-Loss Percentage for {selected_team}', 'x': 0.5})
     return fig
+
 
 @app.callback(
     dash.dependencies.Output('position', 'figure'),
@@ -92,19 +111,19 @@ def timeseries(value):
     for i in range(len(data_path)):
         gdf = pd.read_csv(data_path[i])
         try:
-            position.append(gdf[gdf['Team'] == value].iloc[:,0].values[0])
+            position.append(gdf[gdf['Team'] == value].iloc[:, 0].values[0])
             years.append(year[i])
         except:
             pass
-    
-    time_series_df = pd.DataFrame({'Position':position, "Years": years})
-    fig = px.scatter(time_series_df, x='Years', y="Position",color = "Position",range_y = [0,20], title= f"Finished Position of {value} throughout the years")
-    fig.update_layout({
-    'plot_bgcolor': 'rgba(0,0,0,0.2)',
-    'paper_bgcolor': 'rgba(0,0,0,0.1)'
-    }, title_x = 0.5)
-    return fig
 
+    time_series_df = pd.DataFrame({'Position': position, "Years": years})
+    fig = px.scatter(time_series_df, x='Years', y="Position", color="Position", range_y=[
+                     0, 20], title=f"Finished Position of {value} throughout the years")
+    fig.update_layout({
+        'plot_bgcolor': 'rgba(0,0,0,0.1)',
+        'paper_bgcolor': 'rgba(0,0,0,0)'
+    }, title_x=0.5)
+    return fig
 
 
 if __name__ == '__main__':

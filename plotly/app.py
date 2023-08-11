@@ -23,25 +23,19 @@ app.layout = html.Div(
             style={
                 "position": "absolute",
                 "left": "500px",
-                "width": "200px"
+                "width": "300px",
+                "border-radius": "1px"
             },
             value="Germany"  # Default value for dropdown
         ),
         dcc.Dropdown(
             id="category-dropdown",
             options=[{'label': yr, 'value': yr} for yr in year],
-            style={"width": "200px", "left": "100px"},
+            style={"width": "300px",
+                   "left": "100px",
+                   "border-radius": "1px"},
             value="1934"  # Default value for dropdown
         ),
-
-        html.Div(id='output-div'),
-
-        # dcc.Graph(id="graph",
-        #           figure={
-        #               'layout': {
-        #                   'plot_bgcolor': 'rgba(0,0,0,0.1)',
-        #                   'paper_bgcolor': 'rgba(0,0,0,0.1)'
-        #                   }}),
 
         html.Div(
             html.P(
@@ -50,6 +44,7 @@ app.layout = html.Div(
                 style={"text-align": "center"}
             ),  # Set background color and
         ),
+
         html.Div(children=[dcc.Graph(id="position", style={
             "display": "block", "position": "absolute", "right": "80px", "width": "50%"}),
             dcc.Graph(id="graph",

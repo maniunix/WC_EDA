@@ -22,31 +22,33 @@ app.layout = html.Div(
             id='item-dropdown',
             style={
                 "position": "absolute",
-                "left": "500px",
-                "width": "300px",
-                "border-radius": "1px"
+                "left": "600px",
+                "width": "150px",
+                "border-radius": "1px",
+                "text-align": "center"
             },
             value="Germany"  # Default value for dropdown
         ),
         dcc.Dropdown(
             id="category-dropdown",
             options=[{'label': yr, 'value': yr} for yr in year],
-            style={"width": "300px",
+            style={"width": "150px",
                    "left": "100px",
-                   "border-radius": "1px"},
+                   "border-radius": "1px",
+                   "text-align": "center"},
             value="1934"  # Default value for dropdown
         ),
 
         html.Div(
             html.P(
                 ["This Dashboard contains all the countries which participated in Football Worldcup thoughout the Years.",
-                 html.Br(), "The Graph shows the Win and Loss percentage of country participated."],
+                 html.Br(), "The Graph shows the Win and Loss percentage of country participated and How they fared in the WC positionally."],
                 style={"text-align": "center"}
             ),  # Set background color and
         ),
 
         html.Div(children=[dcc.Graph(id="position", style={
-            "display": "block", "position": "absolute", "right": "80px", "width": "50%"}),
+            "display": "block", "position": "absolute", "right": "80px", "width": "55%"}),
             dcc.Graph(id="graph",
                       figure={
                           'layout': {

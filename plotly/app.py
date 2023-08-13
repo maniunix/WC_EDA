@@ -23,7 +23,6 @@ app.layout = html.Div(
             style={
                 "position": "absolute",
                 "left": "600px",
-                "width": "150px",
                 "border-radius": "1px",
                 "text-align": "center"
             },

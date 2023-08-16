@@ -24,7 +24,8 @@ app.layout = html.Div(
                 "position": "absolute",
                 "left": "600px",
                 "border-radius": "1px",
-                "text-align": "center"
+                "text-align": "center",
+                "width" : "150px"
             },
             value="Germany"  # Default value for dropdown
         ),
